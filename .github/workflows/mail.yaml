@@ -29,7 +29,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/$REPO/$APP
+            ghcr.io/${{ env.REPO }}/${{ env.APP }}
           tags: |
             type=ref,event=tag
             type=ref,event=branch
@@ -70,6 +70,6 @@ jobs:
       - name: Sign Push
         if: github.event_name == 'push'
         run: |
-          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/$REPO/$APP@${{ steps.build-push.outputs.digest }}
+          cosign sign --key env://COSIGN_KEY --tlog-upload=false ghcr.io/${{ env.REPO }}/${{ env.APP }}@${{ steps.build-push.outputs.digest }}
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
