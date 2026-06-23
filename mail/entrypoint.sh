@@ -4,7 +4,6 @@ set -e
 for dir in /etc/postfix /etc/dovecot; do
   find "$dir" -name '*.tmpl' -type f 2>/dev/null | while read -r f; do
     envsubst < "$f" > "${f%.tmpl}"
-    rm "$f"
   done
 done
 
