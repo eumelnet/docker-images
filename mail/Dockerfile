@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     amavisd-new \
     clamav-daemon clamav-freshclam \
     opendkim opendkim-tools \
-    supervisor gettext-base openssl \
+    supervisor gettext-base openssl ca-certificates \
     --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

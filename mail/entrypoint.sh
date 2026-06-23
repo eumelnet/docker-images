@@ -20,6 +20,7 @@ if [ ! -f /etc/ssl/mail/tls.crt ]; then
     -subj "/CN=${MYHOSTNAME:-mail.local}" 2>/dev/null || true
 fi
 
+echo "${MYDOMAIN:-example.com}" > /etc/mailname 2>/dev/null || true
 newaliases 2>/dev/null || true
 postfix -c /etc/postfix check 2>/dev/null || true
 
