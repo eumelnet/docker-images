@@ -64,7 +64,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/$REPO/$APP:latest
+            ghcr.io//${{ env.REPO }}/${{ env.APP }}:latest
             ${{ steps.meta.outputs.tags }}
       - name: Sign Push
         if: github.event_name == 'push'
