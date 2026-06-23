@@ -22,6 +22,9 @@ RUN chmod +x /entrypoint.sh
 COPY safe-run.sh /usr/local/bin/safe-run.sh
 RUN chmod +x /usr/local/bin/safe-run.sh
 
+COPY sqlgrey-wrapper.sh /usr/local/bin/sqlgrey-wrapper.sh
+RUN chmod +x /usr/local/bin/sqlgrey-wrapper.sh
+
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 RUN useradd -r -u 5000 -m -d /data/vmail -s /usr/sbin/nologin vmail \
