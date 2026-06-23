@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-RUN dpkg -i http://archive.ubuntu.com/ubuntu/pool/universe/d/dkimproxy/dkimproxy_1.4.1-3_all.deb
+#RUN dpkg -i http://archive.ubuntu.com/ubuntu/pool/universe/d/dkimproxy/dkimproxy_1.4.1-3_all.deb
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
