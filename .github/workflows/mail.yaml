@@ -53,7 +53,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: docker/build-push-action@v5
         with:
-          context: ./$APP
+          context: ./${{ env.APP }}
           platforms: linux/amd64,linux/arm64
           push: false
       - name: Build and push
@@ -61,7 +61,7 @@ jobs:
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: ./$APP
+          context: ./${{ env.APP }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
