@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 # Verify critical binaries exist
 RUN which amavisd-new 2>/dev/null || echo "WARNING: amavisd-new not found" \
-    && which sqlgrey 2>/dev/null || echo "WARNING: sqlgrey not found"
+    && which sqlgrey 2>/dev/null || echo "WARNING: sqlgrey not found" \
+    && which opendkim 2>/dev/null || echo "WARNING: opendkim not found"
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -29,8 +30,12 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 RUN useradd -r -u 5000 -m -d /data/vmail -s /usr/sbin/nologin vmail \
     && mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav /var/log/dovecot \
+                /etc/opendkim/keys /var/run/opendkim \
     && chown clamav:clamav /data/clamav /var/log/clamav /var/run/clamav \
-    && chown vmail:vmail /data/vmail /var/log/dovecot
+    && chown vmail:vmail /data/vmail /var/log/dovecot \
+    && chown opendkim:opendkim /etc/opendkim /etc/opendkim/keys /var/run/opendkim \
+    # Let clamd read amavis spool dirs (avoids "File path check failure" on virus scans)
+    && usermod -a -G amavis clamav
 
 EXPOSE 25 143 110 587 993 995
 

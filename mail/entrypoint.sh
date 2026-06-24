@@ -24,4 +24,14 @@ echo "${MYDOMAIN:-example.com}" > /etc/mailname 2>/dev/null || true
 newaliases 2>/dev/null || true
 postfix -c /etc/postfix check 2>/dev/null || true
 
+# Stage the DKIM private key with correct ownership/permissions for opendkim.
+# The key is mounted read-only as a Secret at /etc/opendkim/keys-src/mail.private
+# (mode 0400, owned by root - opendkim cannot read it directly).
+if [ -f /etc/opendkim/keys-src/mail.private ]; then
+  mkdir -p /etc/opendkim/keys /var/run/opendkim
+  cp /etc/opendkim/keys-src/mail.private /etc/opendkim/keys/mail.private
+  chown opendkim:opendkim /etc/opendkim/keys/mail.private /var/run/opendkim
+  chmod 600 /etc/opendkim/keys/mail.private
+fi
+
 exec "$@"
