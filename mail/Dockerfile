@@ -29,10 +29,10 @@ RUN chmod +x /usr/local/bin/sqlgrey-wrapper.sh
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 RUN useradd -r -u 5000 -m -d /data/vmail -s /usr/sbin/nologin vmail \
-    && mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav /var/log/dovecot \
+    && mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav \
                 /etc/opendkim/keys /var/run/opendkim \
     && chown clamav:clamav /data/clamav /var/log/clamav /var/run/clamav \
-    && chown vmail:vmail /data/vmail /var/log/dovecot \
+    && chown vmail:vmail /data/vmail \
     && chown opendkim:opendkim /etc/opendkim /etc/opendkim/keys /var/run/opendkim \
     # Let clamd read amavis spool dirs (avoids "File path check failure" on virus scans)
     && usermod -a -G amavis clamav

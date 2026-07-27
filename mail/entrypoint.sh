@@ -7,7 +7,18 @@ for dir in /etc/postfix /etc/dovecot /etc/opendkim; do
   done
 done
 
-mkdir -p /var/spool/postfix /var/log /var/run /data/clamav /data/vmail
+mkdir -p /var/spool/postfix /var/log /var/run /data/clamav /data/vmail /var/log/clamav
+
+# Create named pipes (FIFOs) for services that only log to files.
+# A supervised `cat` process reads each FIFO and writes to stdout,
+# so the logs appear in `kubectl logs` and are scraped by Promtail.
+for fifo in /var/log/dovecot /var/log/dovecot-info \
+            /var/log/clamav/clamd /var/log/clamav/freshclam; do
+  rm -f "$fifo"
+  mkfifo "$fifo"
+done
+chown vmail:vmail /var/log/dovecot /var/log/dovecot-info
+chown clamav:clamav /var/log/clamav/clamd /var/log/clamav/freshclam
 # Generate DKIM KeyTable + SigningTable for multiple domains.
 # DKIM_DOMAINS is a space-separated list of domains that share the same key/selector.
 if [ -n "${DKIM_DOMAINS:-}" ] && [ -f /etc/opendkim/keys-src/tembo.private ]; then
