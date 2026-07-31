@@ -23,6 +23,9 @@ RUN chmod +x /entrypoint.sh
 COPY safe-run.sh /usr/local/bin/safe-run.sh
 RUN chmod +x /usr/local/bin/safe-run.sh
 
+COPY fifo-forward.sh /usr/local/bin/fifo-forward.sh
+RUN chmod +x /usr/local/bin/fifo-forward.sh
+
 COPY sqlgrey-wrapper.sh /usr/local/bin/sqlgrey-wrapper.sh
 RUN chmod +x /usr/local/bin/sqlgrey-wrapper.sh
 
