@@ -52,6 +52,12 @@ echo "${MYDOMAIN:-example.com}" > /etc/mailname 2>/dev/null || true
 newaliases 2>/dev/null || true
 postfix -c /etc/postfix check 2>/dev/null || true
 
+# Update SpamAssassin rules (best-effort: amavis runs SA in-process, picks up
+# rules from /var/lib/spamassassin on restart). Fails silently offline.
+if [ -x /usr/bin/sa-update ]; then
+  sa-update --nogpg >/dev/null 2>&1 || true
+fi
+
 # Stage the DKIM private key with correct ownership/permissions for opendkim.
 # The key is mounted read-only as a Secret at /etc/opendkim/keys-src/mail.private
 # (mode 0400, owned by root - opendkim cannot read it directly).

@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
     postfix postfix-mysql \
     dovecot-core dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-lmtpd dovecot-sieve \
     sqlgrey \
-    amavisd-new \
+    amavisd-new spamassassin \
     clamav-daemon clamav-freshclam \
     opendkim opendkim-tools \
     supervisor gettext-base openssl ca-certificates \
@@ -28,6 +28,12 @@ RUN chmod +x /usr/local/bin/fifo-forward.sh
 
 COPY sqlgrey-wrapper.sh /usr/local/bin/sqlgrey-wrapper.sh
 RUN chmod +x /usr/local/bin/sqlgrey-wrapper.sh
+
+# Global Sieve script: files spam (X-Spam-Flag) into Junk on LMTP delivery.
+COPY sieve/spam-global.sieve /etc/dovecot/sieve/spam-global.sieve
+RUN sievec /etc/dovecot/sieve/spam-global.sieve \
+    && chown root:vmail /etc/dovecot/sieve/spam-global.sieve* \
+    && chmod 640 /etc/dovecot/sieve/spam-global.sieve*
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
