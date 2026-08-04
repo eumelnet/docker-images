@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     dovecot-core dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-lmtpd dovecot-sieve \
     sqlgrey \
     amavisd-new spamassassin \
+    libdbd-sqlite3-perl \
     clamav-daemon clamav-freshclam \
     opendkim opendkim-tools \
     supervisor gettext-base openssl ca-certificates \

@@ -7,7 +7,10 @@ for dir in /etc/postfix /etc/dovecot /etc/opendkim; do
   done
 done
 
-mkdir -p /var/spool/postfix /var/log /var/run /data/clamav /data/vmail /var/log/clamav
+mkdir -p /var/spool/postfix /var/log /var/run /data/clamav /data/vmail /data/sqlgrey /var/log/clamav
+
+# sqlgrey stores its SQLite greylist DB on the persistent volume.
+chown sqlgrey:sqlgrey /data/sqlgrey 2>/dev/null || true
 
 # Create named pipes (FIFOs) for services that only log to files.
 # A supervised `cat` process reads each FIFO and writes to stdout,
