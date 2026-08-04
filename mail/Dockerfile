@@ -29,6 +29,8 @@ RUN chmod +x /usr/local/bin/fifo-forward.sh
 COPY sqlgrey-wrapper.sh /usr/local/bin/sqlgrey-wrapper.sh
 RUN chmod +x /usr/local/bin/sqlgrey-wrapper.sh
 
+RUN useradd -r -u 5000 -m -d /data/vmail -s /usr/sbin/nologin vmail \
+
 # Global Sieve script: files spam (X-Spam-Flag) into Junk on LMTP delivery.
 COPY sieve/spam-global.sieve /etc/dovecot/sieve/spam-global.sieve
 RUN sievec /etc/dovecot/sieve/spam-global.sieve \
@@ -37,8 +39,7 @@ RUN sievec /etc/dovecot/sieve/spam-global.sieve \
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
-RUN useradd -r -u 5000 -m -d /data/vmail -s /usr/sbin/nologin vmail \
-    && mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav \
+RUN mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav \
                 /etc/opendkim/keys /var/run/opendkim \
     && chown clamav:clamav /data/clamav /var/log/clamav /var/run/clamav \
     && chown vmail:vmail /data/vmail \
