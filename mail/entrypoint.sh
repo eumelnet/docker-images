@@ -3,7 +3,7 @@ set -e
 
 for dir in /etc/postfix /etc/dovecot /etc/opendkim; do
   find "$dir" -name '*.tmpl' -type f 2>/dev/null | while read -r f; do
-    envsubst '${MYSQL_HOST}${MYSQL_PORT}${MYSQL_DATABASE}${MYSQL_USER}${MYSQL_PASSWORD}${MYHOSTNAME}${MYDOMAIN}' < "$f" > "${f%.tmpl}"
+    envsubst '${MYSQL_HOST}${MYSQL_PORT}${MYSQL_DATABASE}${MYSQL_USER}${MYSQL_PASSWORD}${MYHOSTNAME}${MYDOMAIN}${MY_IP}' < "$f" > "${f%.tmpl}"
   done
 done
 
