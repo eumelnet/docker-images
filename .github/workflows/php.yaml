@@ -1,4 +1,4 @@
-name: Build Image eumelnet/mail
+name: Build Image eumelnet/php
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
     tags:
       - "*"
     paths: 
-    - 'mail/*'
-    - '.github/workflows/mail.yaml'
+    - 'php/*'
+    - '.github/workflows/php.yaml'
 
 jobs:
   build:
     env:
-      APP: mail
+      APP: php
       REPO: eumelnet
     permissions:
       contents: read
