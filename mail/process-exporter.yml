@@ -1,0 +1,22 @@
+process_names:
+  - name: "amavisd"
+    comm:
+      - "amavisd"
+  - name: "postfix"
+    comm:
+      - "master"
+  - name: "dovecot"
+    comm:
+      - "dovecot"
+  - name: "clamd"
+    comm:
+      - "clamd"
+  - name: "freshclam"
+    comm:
+      - "freshclam"
+  - name: "opendkim"
+    comm:
+      - "opendkim"
+  - name: "sqlgrey"
+    comm:
+      - "sqlgrey"

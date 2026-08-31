@@ -18,6 +18,20 @@ RUN which amavisd-new 2>/dev/null || echo "WARNING: amavisd-new not found" \
     && which sqlgrey 2>/dev/null || echo "WARNING: sqlgrey not found" \
     && which opendkim 2>/dev/null || echo "WARNING: opendkim not found"
 
+# Prometheus process-exporter: expose process metrics (amavisd, postfix, ...)
+ARG TARGETARCH=amd64
+ARG PROCESS_EXPORTER_VERSION=0.8.7
+RUN set -eux; \
+    apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -fsSLo /tmp/process-exporter.tar.gz \
+       "https://github.com/ncabatoff/process-exporter/releases/download/v${PROCESS_EXPORTER_VERSION}/process-exporter-${PROCESS_EXPORTER_VERSION}.linux-${TARGETARCH}.tar.gz" \
+    && tar -xzf /tmp/process-exporter.tar.gz -C /tmp \
+    && cp /tmp/process-exporter-${PROCESS_EXPORTER_VERSION}.linux-${TARGETARCH}/process-exporter /usr/local/bin/process-exporter \
+    && chmod +x /usr/local/bin/process-exporter \
+    && rm -rf /tmp/process-exporter* \
+    && apt-get purge -y --auto-remove curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
@@ -40,6 +54,8 @@ RUN sievec /etc/dovecot/sieve/spam-global.sieve \
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
+COPY process-exporter.yml /etc/process-exporter.yml
+
 RUN mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav \
                 /etc/opendkim/keys /var/run/opendkim \
     && chown clamav:clamav /data/clamav /var/log/clamav /var/run/clamav \
@@ -48,7 +64,7 @@ RUN mkdir -p /data/clamav /data/vmail /var/log/clamav /var/run/clamav \
     # Let clamd read amavis spool dirs (avoids "File path check failure" on virus scans)
     && usermod -a -G amavis clamav
 
-EXPOSE 25 143 110 587 993 995
+EXPOSE 25 143 110 587 993 995 9256
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
